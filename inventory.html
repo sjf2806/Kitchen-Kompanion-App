@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="inventory.css">
+    <script defer src="inventory.js"></script>
+    <title>KitchenKompanion</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Kitchen<span id="h1-half">Kompanion</span></h1>
+
+        <div class="filter-options">
+            <button class="filter-button active" data-filter="all">All</button>
+            <button class="filter-button" data-filter="meats">Meats</button>
+            <button class="filter-button" data-filter="vegetables">Vegetables</button>
+            <button class="filter-button" data-filter="dairy">Dairy</button>
+            <button class="filter-button" data-filter="fruits">Fruits</button>
+            <button class="filter-button" data-filter="frozen">Frozen</button>
+        </div>
+
+        <div class="input-section">
+            <select id="location-select">
+                <option value="yourStock">Stock</option>
+                <option value="refrigeratorStock">Shared Inventory</option>
+            </select>
+            <select id="category-select">
+                <option value="meats">Meats</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="dairy">Dairy</option>
+                <option value="fruits">Fruits</option>
+                <option value="frozen">Frozen</option>
+            </select>
+            <input type="text" id="item-input" placeholder="Name">
+            <input type="text" id="unit-input" placeholder="Unit">
+            <input type="number" id="quantity-input" placeholder="Count" min="1" value="1">
+            <select id="allergen-select">
+                <option value="">Allergen (None)</option>
+                <option value="peanuts">Peanuts</option>
+                <option value="gluten">Gluten</option>
+                <option value="lactose">Lactose</option>
+                <option value="fish">Fish</option>
+            </select>
+        
+            <button id="add-item-button">Add</button>
+        </div>
+
+        <div class="tab-content">
+            <div class="inventory-category">
+                <h2>Stock 
+                    <button class="toggle-section" data-target="your-stock-table">Hide</button>
+                </h2>
+                <table class="item-table" id="your-stock-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Item</th>
+                            <th>Allergen</th>
+                            <th>Qty (Unit)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items-list"></tbody>
+                </table>
+            </div>
+        
+            <div class="inventory-category">
+                <h2>Shared Fridge Inventory
+                    <button class="toggle-section" data-target="refrigerator-stock-table">Hide</button>
+                </h2>
+                <table class="item-table" id="refrigerator-stock-table">
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Item</th>
+                            <th>Allergen</th>
+                            <th>Qty (Unit)</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="refrigerator-items-list">
+                        <tr class="item-row" data-category="meats">
+                            <td><img src="meatsIcon.png" alt="Meats"> Meats</td>
+                            <td class="item-name">Steak</td>
+                            <td class="item-allergen">-</td>
+                            <td><span class="item-count">3</span> pcs</td>
+                            <td>
+                                <button class="reduce-button">-</button>
+                                <button class="add-button">+</button>
+                            </td>
+                        </tr>
+                        <tr class="item-row" data-category="dairy">
+                            <td><img src="dairyIcon.png" alt="Dairy"> Dairy</td>
+                            <td class="item-name">Milk</td>
+                            <td class="item-allergen">Lactose</td>
+                            <td><span class="item-count">2</span> cartons</td>
+                            <td>
+                                <button class="reduce-button">-</button>
+                                <button class="add-button">+</button>
+                            </td>
+                        </tr>
+                        <tr class="item-row" data-category="fruits">
+                            <td><img src="fruitsIcon.png" alt="Fruits"> Fruits</td>
+                            <td class="item-name">Apples</td>
+                            <td class="item-allergen">-</td>
+                            <td><span class="item-count">5</span> pcs</td>
+                            <td>
+                                <button class="reduce-button">-</button>
+                                <button class="add-button">+</button>
+                            </td>
+                        </tr>
+                        <tr class="item-row" data-category="dairy">
+                            <td><img src="dairyIcon.png" alt="Dairy"> Dairy</td>
+                            <td class="item-name">Eggs</td>
+                            <td class="item-allergen">-</td>
+                            <td><span class="item-count">12</span> pcs</td>
+                            <td>
+                                <button class="reduce-button">-</button>
+                                <button class="add-button">+</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <hr>
+        <ul class="tabs">
+            <li class="tab" id="active"><a href="inventory.html"><img src="inventory.png" /><br>Inventory</a></li>
+            <li class="tab"><a href="shoppingList.html"><img src="shoppingIcon.png" /><br>Shopping List</a></li>
+            <li class="tab"><a href="recipe.html"><img src="chef.png"/><br>Recipes</a></li>
+            <li class="tab"><a href="profile.html"><img src="user.png"/><br>Profile</a></li>
+        </ul>
+    </div>
+</body>
+</html>

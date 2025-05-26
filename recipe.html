@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KitchenKompanion</title>
+    <link rel="stylesheet" href="recipe.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Kitchen<div id="h1-half">Kompanion</div></h1>
+        <h4>Recipe Suggestion</h4>
+        <input type="text" id="searchBar" placeholder="Search by ingredient or recipe name...">
+        <h4>Click On Filter To Select Dietary Restrictions (If Any)</h4>
+        <div class="active-filters">
+            <h5>Active Filters:</h5>
+            <div id="activeFilters"></div>
+        </div>
+        <div class="filters">
+            <div class="dropdown">
+                <button class="filter-button" onclick="toggleDropdown('allergyFilterDropdown')">Allergy Filter</button>
+                <div id="allergyFilterDropdown" class="dropdown-content">
+                    <label><input type="checkbox" class="allergy-filter" value="lactose"> Lactose</label>
+                    <label><input type="checkbox" class="allergy-filter" value="peanuts"> Peanuts</label>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="filter-button" onclick="toggleDropdown('dietFilterDropdown')">Diet Filter</button>
+                <div id="dietFilterDropdown" class="dropdown-content">
+                    <label><input type="checkbox" class="diet-filter" value="vegan"> Vegan</label>
+                    <label><input type="checkbox" class="diet-filter" value="non-vegetarian"> Non-Vegetarian</label>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="filter-button" onclick="toggleDropdown('skillFilterDropdown')">Skill Level</button>
+                <div id="skillFilterDropdown" class="dropdown-content">
+                    <label><input type="checkbox" class="skill-filter" value="beginner"> Beginner</label>
+                    <label><input type="checkbox" class="skill-filter" value="intermediate"> Intermediate</label>
+                    <label><input type="checkbox" class="skill-filter" value="advanced"> Advanced</label>
+                </div>
+            </div>
+        </div>
+
+        <div id="recipeList" class="recipe-list"></div>
+
+        <ul class="tabs">
+            <li class="tab"><a href="inventory.html"><img src="inventory.png" /><br>Inventory</a></li>
+            <li class="tab"><a href="shoppingList.html"><img src="shoppingIcon.png" /><br>Shopping List</a></li>
+            <li class="tab" id="active"><a href="recipe.html"><img src="chef.png" /><br>Recipes</a></li>
+            <li class="tab"><a href="profile.html"><img src="user.png" /><br>Profile</a></li>
+        </ul>
+    </div>
+    <div class="virtual-keyboard" id="virtualKeyboard">
+        <div class="keyboard-close" onclick="toggleKeyboard(false)">✕</div>
+        <div class="keyboard-row">
+            <div class="key" onclick="handleKeyClick('1')">1</div>
+            <div class="key" onclick="handleKeyClick('2')">2</div>
+            <div class="key" onclick="handleKeyClick('3')">3</div>
+            <div class="key" onclick="handleKeyClick('4')">4</div>
+            <div class="key" onclick="handleKeyClick('5')">5</div>
+            <div class="key" onclick="handleKeyClick('6')">6</div>
+            <div class="key" onclick="handleKeyClick('7')">7</div>
+            <div class="key" onclick="handleKeyClick('8')">8</div>
+            <div class="key" onclick="handleKeyClick('9')">9</div>
+            <div class="key" onclick="handleKeyClick('0')">0</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="key" onclick="handleKeyClick('q')">Q</div>
+            <div class="key" onclick="handleKeyClick('w')">W</div>
+            <div class="key" onclick="handleKeyClick('e')">E</div>
+            <div class="key" onclick="handleKeyClick('r')">R</div>
+            <div class="key" onclick="handleKeyClick('t')">T</div>
+            <div class="key" onclick="handleKeyClick('y')">Y</div>
+            <div class="key" onclick="handleKeyClick('u')">U</div>
+            <div class="key" onclick="handleKeyClick('i')">I</div>
+            <div class="key" onclick="handleKeyClick('o')">O</div>
+            <div class="key" onclick="handleKeyClick('p')">P</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="key" onclick="handleKeyClick('a')">A</div>
+            <div class="key" onclick="handleKeyClick('s')">S</div>
+            <div class="key" onclick="handleKeyClick('d')">D</div>
+            <div class="key" onclick="handleKeyClick('f')">F</div>
+            <div class="key" onclick="handleKeyClick('g')">G</div>
+            <div class="key" onclick="handleKeyClick('h')">H</div>
+            <div class="key" onclick="handleKeyClick('j')">J</div>
+            <div class="key" onclick="handleKeyClick('k')">K</div>
+            <div class="key" onclick="handleKeyClick('l')">L</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="key" onclick="handleKeyClick('z')">Z</div>
+            <div class="key" onclick="handleKeyClick('x')">X</div>
+            <div class="key" onclick="handleKeyClick('c')">C</div>
+            <div class="key" onclick="handleKeyClick('v')">V</div>
+            <div class="key" onclick="handleKeyClick('b')">B</div>
+            <div class="key" onclick="handleKeyClick('n')">N</div>
+            <div class="key" onclick="handleKeyClick('m')">M</div>
+        </div>
+        <div class="keyboard-row">
+            <div class="key key-space" onclick="handleKeyClick(' ')">Space</div>
+            <div class="key key-backspace" onclick="handleKeyClick('Backspace')">Backspace</div>
+            
+        </div>
+    </div>
+    <script>
+        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+
+        function Meal(name, icon, ingredients) {
+            this.name = name;
+            this.icon = icon;
+            this.ingredients = ingredients
+        }
+
+        const chefIcons = {
+            beginner: 'begChef.png',
+            intermediate: 'intChef.png',
+            advanced: 'advChef.png'
+        };
+        
+        const inventory = [];
+    
+        const recipes = [
+            {
+                name: 'Spaghetti Bolognese',
+                ingredients: ['spaghetti', 'tomato', 'beef', 'onion', 'garlic'],
+                allergens: [], 
+                diet: 'non-vegetarian',
+                skill: 'intermediate',
+                instructions: `Step 1: Cook spaghetti.
+                               Step 2: Sauté onion and garlic.
+                               Step 3: Add beef, cook until brown.
+                               Step 4: Add tomatoes and simmer.`,
+            },
+            {
+                name: 'Vegetable Stir Fry',
+                ingredients: ['broccoli', 'carrot', 'soy sauce', 'tofu'],
+                allergens: [], 
+                diet: 'vegan',
+                skill: 'beginner',
+                instructions: `Step 1: Heat oil in a pan.
+                               Step 2: Add vegetables and tofu.
+                               Step 3: Stir-fry for 5-7 minutes.
+                               Step 4: Add soy sauce.`,
+            },
+            {
+                name: 'Chicken Salad',
+                ingredients: ['chicken', 'lettuce', 'tomato', 'cucumber', 'dressing'],
+                allergens: [], 
+                diet: 'non-vegetarian',
+                skill: 'beginner',
+                instructions: `Step 1: Grill chicken.
+                               Step 2: Cut chicken into pieces.
+                               Step 3: Toss with lettuce, tomato, and cucumber.
+                               Step 4: Add dressing.`,
+            },
+            {
+                name: 'Peanut Butter Toast',
+                ingredients: ['bread', 'peanut butter', 'banana'],
+                allergens: ['peanuts'],
+                diet: 'vegan',
+                skill: 'beginner',
+                instructions: `Step 1: Toast bread.
+                               Step 2: Spread peanut butter.
+                               Step 3: Add sliced bananas on top.`,
+            },
+            {
+                name: 'Cheese Omelette',
+                ingredients: ['eggs', 'cheese', 'milk', 'salt'],
+                allergens: ['lactose'], 
+                diet: 'non-vegetarian',
+                skill: 'intermediate',
+                instructions: `Step 1: Whisk eggs and milk.
+                               Step 2: Pour into pan and cook.
+                               Step 3: Add cheese and fold.`,
+            },
+            {
+                name: 'Yogurt Parfait',
+                ingredients: ['yogurt', 'berries', 'granola', 'honey'],
+                allergens: ['lactose'], 
+                diet: 'vegan',
+                skill: 'beginner',
+                instructions: `Step 1: Layer yogurt in a glass.
+                               Step 2: Add granola and berries.
+                               Step 3: Drizzle honey on top.`,
+            },
+            {
+                name: 'Beef Wellington',
+                ingredients: ['beef', 'puff pastry', 'mushrooms', 'egg yolk'],
+                allergens: [], 
+                diet: 'non-vegetarian',
+                skill: 'advanced',
+                instructions: `Step 1: Sear the beef fillet.
+                               Step 2: Prepare mushroom duxelles.
+                               Step 3: Wrap beef in pastry and chill.
+                               Step 4: Bake at 200°C until golden.`,
+            }
+        ];
+    
+        function displayRecipes(filter = '') {
+            const recipeList = document.getElementById('recipeList');
+            recipeList.innerHTML = '';
+    
+            const selectedAllergens = Array.from(document.querySelectorAll('.allergy-filter:checked')).map(el => el.value);
+            const selectedDiets = Array.from(document.querySelectorAll('.diet-filter:checked')).map(el => el.value);
+            const selectedSkills = Array.from(document.querySelectorAll('.skill-filter:checked')).map(el => el.value);
+    
+            const filteredRecipes = recipes.filter(recipe => {
+                const matchesSearch = recipe.name.toLowerCase().includes(filter.toLowerCase()) ||
+                                      recipe.ingredients.some(ingredient => ingredient.toLowerCase().includes(filter.toLowerCase()));
+                const allergenSafe = selectedAllergens.every(allergy => !recipe.allergens.includes(allergy));
+                const dietMatch = selectedDiets.length === 0 || selectedDiets.includes(recipe.diet);
+                const skillMatch = selectedSkills.length === 0 || selectedSkills.includes(recipe.skill);
+    
+                return matchesSearch && allergenSafe && dietMatch && skillMatch;
+            });
+    
+            filteredRecipes.forEach(recipe => {
+                const card = document.createElement('div');
+                card.className = 'recipe-card';
+    
+                const isFavorited = favorites.some(fav => fav.name === recipe.name);
+
+                card.innerHTML = `
+                <div>
+                    <h3>${recipe.name}</h3>
+                    <p>Ingredients: ${recipe.ingredients.join(', ')}</p>
+                    <p>Skill Level: ${recipe.skill}</p>
+                </div>
+                <button onclick="toggleInstructions(this)">View Preparation Steps</button>
+                <div class="instructions" style="display: none;">
+                    <p>${recipe.instructions.replace(/\n/g, '<br>')}</p>
+                </div>
+                <button onclick="favoriteRecipe('${recipe.name}')">
+                    ${isFavorited ? 'Unfavorite' : 'Favorite'}
+                </button>
+            `;
+
+                recipeList.appendChild(card);
+            });
+        }
+    
+        function toggleInstructions(button) {
+            const instructionsDiv = button.nextElementSibling;
+            instructionsDiv.style.display = instructionsDiv.style.display === 'none' ? 'block' : 'none';
+        }
+    
+        function toggleDropdown(id) {
+
+
+            document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                if (dropdown.id !== id) dropdown.classList.remove('show');
+            });
+            document.getElementById(id).classList.toggle('show');
+}
+
+    
+        window.onclick = function(event) {
+            if (!event.target.matches('.filter-button')) {
+                document.querySelectorAll('.dropdown-content').forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+        };
+    
+        function updateActiveFilters() {
+            const activeFiltersDiv = document.getElementById('activeFilters');
+            activeFiltersDiv.innerHTML = ''; // Clear previous filters
+    
+            const selectedAllergens = Array.from(document.querySelectorAll('.allergy-filter:checked')).map(el => el.value);
+            const selectedDiets = Array.from(document.querySelectorAll('.diet-filter:checked')).map(el => el.value);
+            const selectedSkills = Array.from(document.querySelectorAll('.skill-filter:checked')).map(el => el.value);
+    
+            const allSelectedFilters = [...selectedAllergens, ...selectedDiets, ...selectedSkills];
+    
+            if (allSelectedFilters.length === 0) {
+                activeFiltersDiv.innerHTML = '<p>No filters selected.</p>';
+                return;
+            }
+    
+            allSelectedFilters.forEach(filter => {
+                const filterBadge = document.createElement('span');
+                filterBadge.className = 'filter-badge';
+                filterBadge.textContent = filter;
+    
+                const removeButton = document.createElement('button');
+                removeButton.textContent = '✕';
+                removeButton.className = 'remove-filter';
+                removeButton.onclick = () => removeFilter(filter);
+    
+                filterBadge.appendChild(removeButton);
+                activeFiltersDiv.appendChild(filterBadge);
+            });
+        }
+    
+        function removeFilter(filter) {
+            
+            document.querySelector(`input[value="${filter}"]`).checked = false;
+    
+            
+            displayRecipes(document.getElementById('searchBar').value);
+            updateActiveFilters();
+        }
+
+        function favoriteRecipe(recipeName) {
+                const recipe = recipes.find(r => r.name === recipeName);
+                const index = favorites.findIndex(fav => fav.name === recipeName);
+
+                if (index > -1) {
+                    favorites.splice(index, 1);
+                } else {
+                    item = new Meal (recipe.name, chefIcons[recipe.skill], recipe.ingredients)
+                    favorites.push(item);
+                }
+
+                localStorage.setItem('favorites', JSON.stringify(favorites));
+                displayRecipes();
+        }
+    
+        
+        document.querySelectorAll('.allergy-filter, .diet-filter, .skill-filter').forEach(filter => {
+            filter.addEventListener('change', () => {
+                displayRecipes(document.getElementById('searchBar').value);
+                updateActiveFilters();
+            });
+        });
+    
+        
+        displayRecipes();
+        updateActiveFilters();
+    
+        document.getElementById('searchBar').addEventListener('input', (event) => {
+            displayRecipes(event.target.value);
+        });
+        document.getElementById('searchBar').addEventListener('focus', () => {
+            document.getElementById('keyboard').style.display = 'flex'; 
+        });
+
+        document.getElementById('searchBar').addEventListener('blur', () => {
+            document.getElementById('keyboard').style.display = 'none'; 
+        });
+        document.getElementById('searchBar').addEventListener('focus', () => {
+            toggleKeyboard(true); 
+        });
+
+        function toggleKeyboard(show) {
+            const keyboard = document.getElementById("virtualKeyboard");
+            keyboard.style.display = show ? "flex" : "none";
+        }
+
+        function handleKeyClick(key) {
+             const searchBar = document.getElementById("searchBar");
+            if (key === 'Backspace') {
+                 searchBar.value = searchBar.value.slice(0, -1);
+            } else if (key === 'Space') {
+                searchBar.value += ' ';
+            } else {
+                searchBar.value += key;
+            }
+            displayRecipes(searchBar.value);
+        }
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KitchenKompanion</title>
+    <link rel="stylesheet" href="shoppingList.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Shopping List</h1>
+
+        <div class="header">
+            <select id="category-filter">
+                <option value="all">All Categories</option>
+                <option value="dairy">Dairy</option>
+                <option value="frozen">Frozen</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="fruits">Fruits</option>
+                <option value="meats">Meats</option>
+                <option value="snacks">Snacks</option>
+            </select>
+
+            <input type="text" id="new" placeholder="New Grocery Item..." readonly onclick="toggleKeyboard(true)">
+            <button id="add" class="add">ADD +</button>
+        </div>
+        
+        <ul id="shopping-list"></ul>
+        
+        <ul class="tabs">
+            <li class="tab"><a href="inventory.html"><img src="inventory.png" /><br>Inventory</a></li>
+            <li class="tab" id="active"><a href="shoppingList.html"><img src="shoppingIcon.png" /><br>Shopping List</a></li>
+            <li class="tab"><a href="recipe.html"><img src="chef.png"/><br>Recipes</a></li>
+            <li class="tab"><a href="profile.html"><img src="user.png"/><br>Profile</a></li>
+        </ul>
+        
+        <div class="virtual-keyboard" id="virtualKeyboard">
+            <div class="keyboard-close" onclick="toggleKeyboard(false)">✕</div>
+            <div class="keyboard-row">
+                <div class="key" onclick="handleKeyClick('1')">1</div>
+                <div class="key" onclick="handleKeyClick('2')">2</div>
+                <div class="key" onclick="handleKeyClick('3')">3</div>
+                <div class="key" onclick="handleKeyClick('4')">4</div>
+                <div class="key" onclick="handleKeyClick('5')">5</div>
+                <div class="key" onclick="handleKeyClick('6')">6</div>
+                <div class="key" onclick="handleKeyClick('7')">7</div>
+                <div class="key" onclick="handleKeyClick('8')">8</div>
+                <div class="key" onclick="handleKeyClick('9')">9</div>
+                <div class="key" onclick="handleKeyClick('0')">0</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key" onclick="handleKeyClick('q')">Q</div>
+                <div class="key" onclick="handleKeyClick('w')">W</div>
+                <div class="key" onclick="handleKeyClick('e')">E</div>
+                <div class="key" onclick="handleKeyClick('r')">R</div>
+                <div class="key" onclick="handleKeyClick('t')">T</div>
+                <div class="key" onclick="handleKeyClick('y')">Y</div>
+                <div class="key" onclick="handleKeyClick('u')">U</div>
+                <div class="key" onclick="handleKeyClick('i')">I</div>
+                <div class="key" onclick="handleKeyClick('o')">O</div>
+                <div class="key" onclick="handleKeyClick('p')">P</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key" onclick="handleKeyClick('a')">A</div>
+                <div class="key" onclick="handleKeyClick('s')">S</div>
+                <div class="key" onclick="handleKeyClick('d')">D</div>
+                <div class="key" onclick="handleKeyClick('f')">F</div>
+                <div class="key" onclick="handleKeyClick('g')">G</div>
+                <div class="key" onclick="handleKeyClick('h')">H</div>
+                <div class="key" onclick="handleKeyClick('j')">J</div>
+                <div class="key" onclick="handleKeyClick('k')">K</div>
+                <div class="key" onclick="handleKeyClick('l')">L</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key" onclick="handleKeyClick('z')">Z</div>
+                <div class="key" onclick="handleKeyClick('x')">X</div>
+                <div class="key" onclick="handleKeyClick('c')">C</div>
+                <div class="key" onclick="handleKeyClick('v')">V</div>
+                <div class="key" onclick="handleKeyClick('b')">B</div>
+                <div class="key" onclick="handleKeyClick('n')">N</div>
+                <div class="key" onclick="handleKeyClick('m')">M</div>
+            </div>
+            <div class="keyboard-row">
+                <div class="key key-space" onclick="handleKeyClick(' ')">Space</div>
+                <div class="key key-backspace" onclick="handleKeyClick('Backspace')">Backspace</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const categoryIcons = {
+            dairy: 'dairyIcon.png',
+            frozen: 'frozenIcon.png',
+            vegetables: 'vegetablesIcon.png',
+            fruits: 'fruitsIcon.png',
+            meats: 'meatsIcon.png',
+            snacks: 'snacksIcon.png'
+        };
+
+        document.getElementById('add').addEventListener('click', addItem);
+        document.getElementById('category-filter').addEventListener('change', filterItems);
+
+        function toggleKeyboard(show) {
+            const keyboard = document.getElementById('virtualKeyboard');
+            keyboard.style.display = show ? 'block' : 'none';
+        }
+
+        function handleKeyClick(key) {
+            const input = document.getElementById('new');
+            if (key === 'Backspace') {
+                input.value = input.value.slice(0, -1);
+            } else {
+                input.value += key;
+            }
+        }
+
+        function addItem() {
+            let itemText = document.getElementById('new').value.trim();
+            if (itemText === '') {
+                return;
+            }
+
+            itemText = itemText.charAt(0).toUpperCase() + itemText.slice(1);
+
+            let li = document.createElement('li');
+            li.className = 'list-item';
+            li.addEventListener('click', toggleCompleted);
+
+            let icon = document.createElement('img');
+            icon.className = 'category-icon';
+
+            let span = document.createElement('span');
+            span.textContent = itemText;
+
+            let categoryDropdown = document.createElement('select');
+            categoryDropdown.className = 'category';
+            categoryDropdown.innerHTML = `
+                <option value="uncategorized">Uncategorized</option>
+                <option value="dairy">Dairy</option>
+                <option value="frozen">Frozen</option>
+                <option value="vegetables">Vegetables</option>
+                <option value="fruits">Fruits</option>
+                <option value="meats">Meats</option>
+                <option value="snacks">Snacks</option>
+            `;
+
+            categoryDropdown.addEventListener('change', function() {
+                let selectedCategory = categoryDropdown.value;
+                if (selectedCategory !== 'uncategorized') {
+                    icon.src = categoryIcons[selectedCategory];
+                    icon.style.display = 'inline';
+                } else {
+                    icon.src = '';
+                    icon.style.display = 'none';
+                }
+                filterItems();
+            });
+
+            let quantityInput = document.createElement('input');
+            quantityInput.type = 'number';
+            quantityInput.value = 1;
+            quantityInput.className = 'quantity';
+            quantityInput.min = 1;
+
+            let deleteButton = document.createElement('button');
+            deleteButton.textContent = 'X';
+            deleteButton.className = 'delete-btn';
+            deleteButton.onclick = function(e) {
+                e.stopPropagation();
+                li.remove();
+            };
+
+            li.appendChild(icon);
+            li.appendChild(span);
+            li.appendChild(categoryDropdown);
+            li.appendChild(quantityInput);
+            li.appendChild(deleteButton);
+
+            document.getElementById('shopping-list').appendChild(li);
+            document.getElementById('new').value = '';
+            toggleKeyboard(false);
+        }
+
+        function toggleCompleted(event) {
+            event.target.classList.toggle('completed');
+        }
+
+        function filterItems() {
+            let category = document.getElementById('category-filter').value;
+            let items = document.querySelectorAll('#shopping-list li');
+
+            items.forEach(function(item) {
+                let itemCategory = item.querySelector('.category').value;
+                if (category === 'all' || itemCategory === category) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

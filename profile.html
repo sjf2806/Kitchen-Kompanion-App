@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Basic HTML5 Document">
+    <meta name="keywords" content="HTML5, Responsive">
+    <link rel="stylesheet" href="profile.css">
+    <script defer src="main1.js"></script>
+    <title>KitchenKompanion</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="tab-content">
+            <div id="text" data-tab-content class="active">
+                <h1><div id="h1-half">KitchenKompanion</div></h1>
+
+                <div style="display: flex; align-items: center;">
+                    <div class="green">Favorite Recipes</div>
+                    <div class="add-item">
+                        <img src="scroll_icons/add.png" class="add-item" onclick="openAddModelRec(favMeals, allMealsSet, 'meal')"/>
+                    </div>
+                </div>
+
+                <div class="scrollmenu-fav">
+                </div>
+
+
+                <div style="display: flex; align-items: center;">
+                    <div class="green">Allergies</div>
+                    <div class="add-item">
+                        <img src="scroll_icons/add.png" class="add-item" onclick="openAddModel(favAllergies, allAllergies, 'allergy')"/>
+                    </div>
+                </div>
+                
+                <div class="scrollmenu">
+                </div>
+
+                <div id="mealModal" class="modal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <span class="close" onclick="closeModal('mealModal')">&times;</span>
+                        <h2 class="modal-name"></h2>
+                        <h4 class="model-ing-title">Ingredients:</h4>
+                        <ul class="modal-ingredients"></ul>
+                    </div>
+                </div>
+
+                <div id="addModal" class="modal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <span class="close" onclick="closeAddModal()">&times;</span>
+                        <h2>Add Item</h2>
+                        <strong id="color-main">Name: </strong><input type="text" id="new" placeholder="New Item To Add..."><br><br>
+                        <strong id="color-main">Category: </strong><select></select>
+                        <button id="addToFavButton">Add to Favorites</button>
+                        <hr>
+                        <div class="meal-pics"></div>
+                    </div>
+                </div>
+
+                <div id="addModalRec" class="modal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <span class="close" onclick="closeAddModalRec()">&times;</span>
+                        <h2>Add Item</h2>
+                        <strong id="color-main">Name: </strong>
+                        <input type="text" id="new" placeholder="New Item To Add..."><br><br>
+                
+                        <strong id="color-main">Ingredients: </strong>
+                        <div id="ingredients-container">
+                            <input type="text" id="ingredient-input" placeholder="Enter an ingredient">
+                            <button id="add-ingredient-button">Add Ingredient</button>
+                        </div>
+                        <ul id="ingredients-list"></ul><br><br>
+                
+                        <strong id="color-main">Skill Level: </strong>
+                        <select></select>
+                        <button id="addToFavButton3">Add to Favorites</button>
+                        <hr>
+                        <div class="meal-pics"></div>
+                    </div>
+                </div>
+
+
+                <div id="addModalAllergy" class="modal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <span class="close" onclick="closeAddModalAllergy()">&times;</span>
+                        <h2>Add Item</h2>
+                        <select></select>
+                        <button id="addToFavButton2">Add Allergy</button>
+                        <hr>
+                        <div class="meal-pics"></div>
+                    </div>
+                </div>
+
+                <div id="removeModal" class="modal">
+                    <div class="modal-overlay"></div>
+                    <div class="modal-content">
+                        <span class="close" onclick="closeAddModal()">&times;</span>
+                        <h2>Remove Item</h2>
+                        <select></select>
+                        <button id="removeFavButton">Add to Favorites</button>
+                        <div class="meal-pics"></div>
+                    </div>
+                </div>
+
+                
+           </div>
+
+        </div>
+
+        <ul class="tabs">
+            <li class="tab"><a href="inventory.html"><img src="inventory.png" /><br>Inventory</a></li>
+            <li class="tab"><a href="shoppingList.html"><img src="shoppingIcon.png" /><br>Shopping List</a></li>
+            <li class="tab"><a href="recipe.html"><img src="chef.png"/><br>Recipes</a></li>
+            <li class="tab" id="active"><a href="profile.html"><img src="user.png"/><br>Profile</a></li>
+        </ul>
+    </div>
+</body>
+
+</html>
